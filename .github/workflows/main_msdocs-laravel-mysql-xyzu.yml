@@ -46,9 +46,7 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
-
+    
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
@@ -58,13 +56,6 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
       
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_56747299FFC14F88BDD747455ED6D395 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_CCC38DEEE6E0434EBF3500CEF1A45DDA }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_A2E6F36C413345F1A405F66984DF77B4 }}
-
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
@@ -72,4 +63,4 @@ jobs:
           app-name: 'msdocs-laravel-mysql-XYZU'
           slot-name: 'Production'
           package: .
-          
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_224D02EE49DE4544B613EDEE40BF2487 }}
